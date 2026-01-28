@@ -53,7 +53,11 @@ CREATE TABLE `user_relationships` (
 
 ```follow.php```を作成する。
 
-[https://github](https://github)
+[https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/public/20260114/follow.php](https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/public/20260114/follow.php)
+
+プロフィールページから遷移できるようにし、すでにフォローしている場合はそのことを表示するようにする。
+
+[https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/public/20260114/profile.php](https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/public/20260114/profile.php)
 
 
 ## 自身がフォローしている人の投稿のみが時系列で表示される画面(=タイムライン)があること
@@ -70,8 +74,8 @@ ORDER BY bbs_entries.created_at DESC
 
 ```timeline_in.php```の```multiple```で画像を選択できるようになっており、```nginx/conf.d/default.conf```の```client_max_body_size 20M;```の設定により、20MBまでのデータであれば送信できるようにしている。
 
-timeline_in.php:[https://github](https://github)
-nginx/conf.d/default.conf:[https://github](https://github)
+timeline_in.php:[https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/public/20260114/timeline_in.php](https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/public/20260114/timeline_in.php)
+nginx/conf.d/default.conf:[https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/nginx/conf.d/default.conf](https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/nginx/conf.d/default.conf)
 
 ## 投稿に対して画像を1枚だけではなく複数枚(最大4枚)付けれるようにする
 画像専用の```entry_images```テーブルを作成する。
@@ -115,14 +119,14 @@ docker-compose up -d --build
 ```
 ```style.css```の実装
 
-style.css:[https://github](https://github)
+style.css:[https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/public/20260114/style.css](https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/public/20260114/style.css)
 
 ## タイムラインを無限スクロールにする
 ```timeline_json.php```の中身を、投稿IDごとに```entry_images```テーブルを検索し、```image_filenames```としてまとめるようにする。
 
 ```LIMIT```と```OFFSET```を実装し、取得件数と開始位置の制御を行う。
 
-timeline_json.php:[https://github](https://github)
+timeline_json.php:[https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/public/20260114/timeline_json.php](https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/public/20260114/timeline_json.php)
 
 ```timeline_in.php```の実装
 
@@ -130,4 +134,4 @@ timeline_json.php:[https://github](https://github)
 
 ```fetch```を使い、画面を維持したまま、新しいデータを一番下に貼り付けるようにする。
 
-timeline_in.php:[https://github](https://github)
+timeline_in.php:[https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/public/20260114/timeline_in.php](https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/public/20260114/timeline_in.php)
