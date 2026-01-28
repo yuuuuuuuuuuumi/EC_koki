@@ -36,8 +36,8 @@ $select_sth = $dbh->prepare(
   . " WHERE follower_user_id = :follower_user_id AND followee_user_id = :followee_user_id"
 );
 $select_sth->execute([
-  ':followee_user_id' => $followee_user['id'], 
-  ':follower_user_id' => $_SESSION['login_user_id'],
+  ':followee_user_id' => $followee_user['id'], // フォローされている
+  ':follower_user_id' => $_SESSION['login_user_id'], // フォローしている
 ]);
 $relationship = $select_sth->fetch();
 
