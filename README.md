@@ -122,6 +122,8 @@ docker-compose up -d --build
 style.css:[https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/public/20260114/style.css](https://github.com/yuuuuuuuuuuumi/EC_koki/blob/main/public/20260114/style.css)
 
 ## タイムラインを無限スクロールにする
+**cさん**のアカウントをフォローしたら、投稿が多めに作成されています。
+
 ```timeline_json.php```の中身を、投稿IDごとに```entry_images```テーブルを検索し、```image_filenames```としてまとめるようにする。
 
 ```LIMIT```と```OFFSET```を実装し、取得件数と開始位置の制御を行う。
