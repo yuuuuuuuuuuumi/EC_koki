@@ -1,14 +1,13 @@
 <?php
 session_start();
 
-// ログインしてなければログイン画面に飛ばす
 if (empty($_SESSION['login_user_id'])) {
   header("HTTP/1.1 302 Found");
   header("Location: /login.php");
   return;
 }
 
-// フォロー解除対象のユーザーIDを取得
+// フォロー解除対象のユーザーID
 if (empty($_GET['followee_user_id'])) {
   header("HTTP/1.1 400 Bad Request");
   print("フォロー解除対象のユーザーIDが指定されていません");
@@ -16,7 +15,6 @@ if (empty($_GET['followee_user_id'])) {
 }
 $followee_user_id = $_GET['followee_user_id'];
 
-// DBに接続
 $dbh = new PDO('mysql:host=mysql;dbname=example_db', 'root', '');
 
 // フォロー解除対象のユーザー情報を取得
@@ -38,18 +36,18 @@ $select_sth = $dbh->prepare(
   . " WHERE follower_user_id = :follower_user_id AND followee_user_id = :followee_user_id"
 );
 $select_sth->execute([
-  ':followee_user_id' => $followee_user['id'], // フォローされる側
-  ':follower_user_id' => $_SESSION['login_user_id'], // フォローする側（ログインユーザー）
+  ':followee_user_id' => $followee_user['id'], 
+  ':follower_user_id' => $_SESSION['login_user_id'],
 ]);
 $relationship = $select_sth->fetch();
 
-if (empty($relationship)) { // 既にフォロー関係がない場合はエラー表示
+if (empty($relationship)) { 
   print(htmlspecialchars($followee_user['name']) . " さんは既にフォローされていません。");
   return;
 }
 
 $delete_result = false;
-if ($_SERVER['REQUEST_METHOD'] == 'POST') { // フォームでPOSTした場合は実際のフォロー解除処理を行う
+if ($_SERVER['REQUEST_METHOD'] == 'POST') { 
   $delete_sth = $dbh->prepare(
     "DELETE FROM user_relationships"
     . " WHERE follower_user_id = :follower_user_id AND followee_user_id = :followee_user_id"
