@@ -10,6 +10,7 @@ if (empty($_SESSION['login_user_id'])) {
 $dbh = new PDO('mysql:host=mysql;dbname=example_db', 'root', '');
 
 // フォローしている一覧
+// フォローしている対象の会員情報も一緒に取得
 $select_sth = $dbh->prepare(
   'SELECT user_relationships.*, users.name AS followee_user_name, users.icon_filename AS followee_user_icon_filename'
   . ' FROM user_relationships INNER JOIN users ON user_relationships.followee_user_id = users.id'
