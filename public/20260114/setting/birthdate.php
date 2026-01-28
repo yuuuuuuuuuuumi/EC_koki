@@ -5,9 +5,7 @@ if (empty($_SESSION['login_user_id'])) {
     header("Location: /login.php");
     return;
 }
-// DBに接続
 $dbh = new PDO('mysql:host=mysql;dbname=example_db', 'root', '');
-// セッションにあるログインIDから、ログインしている対象の会員情報を引く
 $select_sth = $dbh->prepare("SELECT * FROM users WHERE id = :id");
 $select_sth->execute([
     ':id' => $_SESSION['login_user_id'],
@@ -15,11 +13,8 @@ $select_sth->execute([
 $user = $select_sth->fetch();
 
 if (isset($_POST['birthdate'])) {
-    // POSTで生年月日が送られてきた場合の処理
     $birthdate = $_POST['birthdate'];
 
-    // 簡単なバリデーション (日付形式であるか)
-    // 実際にはより厳密なチェックが必要ですが、ここでは date() 関数で検証
     if (!empty($birthdate) && strtotime($birthdate) !== false) {
         // usersテーブルを更新する
         $update_sth = $dbh->prepare("UPDATE users SET birthdate = :birthdate WHERE id = :id");
@@ -28,12 +23,10 @@ if (isset($_POST['birthdate'])) {
             ':id' => $_SESSION['login_user_id'],
         ]);
         
-        // 処理が終わったらリダイレクトする
         header("HTTP/1.1 303 See Other");
         header("Location: ./birthdate.php");
         return;
     } else {
-        // エラー処理（ここでは省略）
         $error = "正しい日付形式で入力してください。";
     }
 }
