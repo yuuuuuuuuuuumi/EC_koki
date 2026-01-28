@@ -2,7 +2,7 @@
 session_start();
 $dbh = new PDO('mysql:host=mysql;dbname=example_db', 'root', '');
 
-// 会員データを取得
+// 会員データ
 $sql = 'SELECT * FROM users';
 $prepare_params = [];
 $where_sql_array = [];
@@ -13,11 +13,11 @@ if (!empty($_GET['name'])) {
 }
 if (!empty($_GET['year_from'])) {
   $where_sql_array[] = ' birthday >= :year_from';
-  $prepare_params[':year_from'] = $_GET['year_from'] . '-01-01'; // 入力年の1月1日
+  $prepare_params[':year_from'] = $_GET['year_from'] . '-01-01'; 
 }
 if (!empty($_GET['year_until'])) {
   $where_sql_array[] = ' birthday <= :year_until';
-  $prepare_params[':year_until'] = $_GET['year_until'] . '-12-31'; // 入力年の12月31日
+  $prepare_params[':year_until'] = $_GET['year_until'] . '-12-31'; 
 }
 if (!empty($where_sql_array)) {
   $sql .= ' WHERE ' . implode(' AND', $where_sql_array);
@@ -27,7 +27,6 @@ $sql .= ' ORDER BY id DESC';
 $select_sth = $dbh->prepare($sql);
 $select_sth->execute($prepare_params);
 
-// ログインしている場合、フォローしている会員IDリストを取得
 $followee_user_ids = [];
 if (!empty($_SESSION['login_user_id'])) {
   $followee_users_select_sth = $dbh->prepare(
@@ -41,7 +40,7 @@ if (!empty($_SESSION['login_user_id'])) {
       return $relationship['followee_user_id'];
     },
     $followee_users_select_sth->fetchAll()
-  ); // array_map で followee_user_id カラムだけ抜き出す
+  ); 
 }
 include_once('header.php');
 ?>
@@ -71,7 +70,6 @@ include_once('header.php');
   <?php foreach($select_sth as $user): ?>
     <div style="display: flex; justify-content: start; align-items: center; padding: 1em 2em;">
       <?php if(empty($user['icon_filename'])): ?>
-        <!-- アイコン無い場合は同じ大きさの空白を表示して揃えておく -->
         <div style="height: 2em; width: 2em;"></div>
       <?php else: ?>
         <img src="/image/<?= $user['icon_filename'] ?>"
