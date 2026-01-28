@@ -3,10 +3,8 @@ $user = null;
 if (!empty($_GET['user_id'])) {
     $user_id = $_GET['user_id'];
     
-    // DBに接続
     $dbh = new PDO('mysql:host=mysql;dbname=example_db', 'root', '');
     
-    // 対象の会員情報を引く
     $select_sth = $dbh->prepare("SELECT * FROM users WHERE id = :id");
     $select_sth->execute([
         ':id' => $user_id,
@@ -20,7 +18,6 @@ if (empty($user)) {
     return;
 }
 
-// この人の投稿データを取得
 $select_sth = $dbh->prepare(
     'SELECT bbs_entries.*, users.name AS user_name, users.icon_filename AS user_icon_filename'
     . ' FROM bbs_entries INNER JOIN users ON bbs_entries.user_id = users.id'
@@ -31,33 +28,29 @@ $select_sth->execute([
     ':user_id' => $user_id,
 ]);
 
-// フォロー状態を取得
 $relationship = null;
 session_start();
-if (!empty($_SESSION['login_user_id'])) { // ログインしている場合
-    // フォロー状態をDBから取得
+if (!empty($_SESSION['login_user_id'])) {
     $select_sth = $dbh->prepare(
         "SELECT * FROM user_relationships"
         . " WHERE follower_user_id = :follower_user_id AND followee_user_id = :followee_user_id"
     );
     $select_sth->execute([
-        ':followee_user_id' => $user['id'], // フォローされる側は閲覧しようとしているプロフィールの会員
-        ':follower_user_id' => $_SESSION['login_user_id'], // フォローする側はログインしている会員
+        ':followee_user_id' => $user['id'], 
+        ':follower_user_id' => $_SESSION['login_user_id'], 
     ]);
     $relationship = $select_sth->fetch();
 }
 
-// フォローされている状態を取得
 $follower_relationship = null;
-if (!empty($_SESSION['login_user_id'])) { // ログインしている場合
-  // フォローされている状態をDBから取得
+if (!empty($_SESSION['login_user_id'])) { 
   $select_sth = $dbh->prepare(
     "SELECT * FROM user_relationships"
     . " WHERE follower_user_id = :follower_user_id AND followee_user_id = :followee_user_id"
   );
   $select_sth->execute([
-    ':follower_user_id' => $user['id'], // フォローしている側は閲覧しようとしているプロフィールの会員
-    ':followee_user_id' => $_SESSION['login_user_id'], // フォローされる側はログインしている会員
+    ':follower_user_id' => $user['id'], 
+    ':followee_user_id' => $_SESSION['login_user_id'], 
   ]);
   $follower_relationship = $select_sth->fetch();
 }
@@ -91,23 +84,23 @@ include_once('header.php');
     </div>
 </div>
 
-<?php if($user['id'] === $_SESSION['login_user_id']): // 自分自身の場合 ?>
+<?php if($user['id'] === $_SESSION['login_user_id']): ?>
 <div style="margin: 1em 0;">
   自分<br>
   <a href="/setting/index.php">設定画面はこちら</a>
 </div>
-<?php else: // 他人の場合 ?>
+<?php else:  ?>
 <div style="margin: 1em 0;">
-  <?php if(empty($relationship)): // フォローしていない場合 ?>
+  <?php if(empty($relationship)):  ?>
   <div>
     <a href="./follow.php?followee_user_id=<?= $user['id'] ?>">フォローする</a>
   </div>
-  <?php else: // フォローしている場合 ?>
+  <?php else:  ?>
   <div>
     <?= $relationship['created_at'] ?> にフォローしました。
   </div>
   <?php endif; ?>
-  <?php if(empty($follower_relationship)):  // フォローされている場合 ?>
+  <?php if(empty($follower_relationship)):   ?>
   <div>
     フォローされています。
   </div>
