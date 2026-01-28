@@ -5,9 +5,7 @@ if (empty($_SESSION['login_user_id'])) {
   header("Location: /login.php");
   return;
 }
-// DBに接続
 $dbh = new PDO('mysql:host=mysql;dbname=example_db', 'root', '');
-// セッションにあるログインIDから、ログインしている対象の会員情報を引く
 $select_sth = $dbh->prepare("SELECT * FROM users WHERE id = :id");
 $select_sth->execute([
   ':id' => $_SESSION['login_user_id'],
@@ -20,7 +18,7 @@ include_once('../header.php');
 <p>
   現在の設定
 </p>
-<dl> <!-- 登録情報を出力する際はXSS防止のため htmlspecialchars() を必ず使いましょう -->
+<dl> 
   <dt>ID</dt>
   <dd><?= htmlspecialchars($user['id']) ?></dd>
   <dt>メールアドレス</dt>
