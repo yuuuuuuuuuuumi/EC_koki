@@ -28,16 +28,18 @@ $select_sth->execute([
     ':user_id' => $user_id,
 ]);
 
+// フォロー状態を取得
 $relationship = null;
 session_start();
 if (!empty($_SESSION['login_user_id'])) {
+    // フォロー状態をDBから取得
     $select_sth = $dbh->prepare(
         "SELECT * FROM user_relationships"
         . " WHERE follower_user_id = :follower_user_id AND followee_user_id = :followee_user_id"
     );
     $select_sth->execute([
-        ':followee_user_id' => $user['id'], 
-        ':follower_user_id' => $_SESSION['login_user_id'], 
+        ':followee_user_id' => $user['id'],    // フォローされる側は閲覧しようとしているプロフィールの会員
+        ':follower_user_id' => $_SESSION['login_user_id'],    // フォローする側はログインしている会員
     ]);
     $relationship = $select_sth->fetch();
 }
@@ -70,7 +72,7 @@ include_once('header.php');
     <div style="position: absolute; top: -5em;">
         <div style="display: flex; align-items: end; justify-content: start;">
             <div style="margin: 0 1em; height: 10em; width: 10em; border: 3px solid white; border-radius: 50%;">
-                <?php if(empty($user['icon_filename'])): ?>
+                <?php if(empty($user['icon_filename'])): ?>  // フォローしていない場合 
                 <div style="height: 100%; width: 100%; border-radius: 50%; background-color: lightgray; display: flex; justify-content: center; align-items: center;">
                     <div>アイコン未設定</div>
                 </div>
